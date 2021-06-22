@@ -1,6 +1,7 @@
 package xyz.kidjaya.service;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -16,49 +17,46 @@ import java.util.Date;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class UserServiceTest {
+
     @Autowired
-    private static UserService userService;
+    private UserService userService;
 
     @MockBean
-    private static UserMapper userMapper;
+    private UserMapper userMapper;
 
-    /**
-     * 创建用户测试
-     */
-    @Test
-    public void addUser() throws Exception{
-        User user = new User();
+    private User user;
+
+    @Before
+    public void before() {
+        user = new User();
         user.setId("21u3oadnsk1o23u");
         user.setNickname("kidjaya");
         user.setCover("https://www.baidu.com");
         user.setOpenid("akjsdlkjl123");
         user.setGmtCreate(new Date());
         user.setGmtModified(new Date());
+    }
 
-        Mockito.when(userService.save(Mockito.any(User.class))).thenReturn(true);
-        boolean result = userService.save(user);
+    /**
+     * 创建用户测试
+     */
+    @Test
+    public void given_user_when_newUserRegister_then_success(){
+        Mockito.when(userMapper.insert(Mockito.any(User.class))).thenReturn(1);
+        int result = userService.save(this.user)? 1 : 0;
 
-        Assert.assertTrue(result);
+        Assert.assertEquals(result,1);
     }
 
     /**
      * 查询用户测试
      */
     @Test
-    public void getUser(){
-        String id = "123123abc";
-        User userReturn = new User();
-        userReturn.setOpenid("ajsdlkjald12");
-        userReturn.setCover("http://www.baidu.com/asdjlk/123.jpg");
-        userReturn.setNickname("kidjaya");
-        userReturn.setId(id);
-        userReturn.setGmtModified(new Date());
-        userReturn.setGmtModified(new Date());
-
-        Mockito.when(userMapper.selectById(id)).thenReturn(userReturn);
-        User user = userService.getById(id);
+    public void given_user_when_findAUser_then_success(){
+        Mockito.when(userMapper.selectById(this.user.getId())).thenReturn(this.user);
+        User user = userService.getById(this.user.getId());
 
         Assert.assertNotNull(user);
-        Assert.assertEquals(user.getId(), id);
+        Assert.assertEquals(user.getId(), this.user.getId());
     }
 }

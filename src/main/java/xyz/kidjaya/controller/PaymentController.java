@@ -24,9 +24,9 @@ public class PaymentController {
     }
 
     @GetMapping("{carNumber}")
-    public Result getOrderById(@PathVariable String carNumber) {
+    public Result getOrderByCarNumber(@PathVariable String carNumber) {
         Payment payment = paymentService.getByCarNumber(carNumber);
-        return Result.builder().ok().data("key","value").build();
+        return Result.builder().ok().data("id","粤B88888").build();
     }
 
     @DeleteMapping
@@ -45,7 +45,7 @@ public class PaymentController {
     }
 
     @PostMapping("/pay")
-    public Result payOrder(String orderId, String userId) {
+    public Result payOrder(String paymentId, String userId) {
         return Result.ok();
     }
 }
